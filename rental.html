@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rental Cost for Each Property Type</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f7f7f7;
+        }
+        /* Styling for the page header */
+        .header {
+            background: #000000;
+            color: #fff;
+            padding: 10px 0;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .header h1 {
+            margin: 0;
+            padding-left: 15px;
+        }
+        .header img {
+            height: 100px;
+        }
+        /* Styling for the navigation bar */
+        .nav {
+            padding: 0;
+            margin: 0;
+            list-style-type: none;
+            background-color: #444;
+            overflow: hidden;
+            display: flex;
+            justify-content: center;
+        }
+        .nav li {
+            float: none; 
+        }
+        .nav li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+        .nav li a:hover {
+            background-color: #111;
+        }
+        .main-content {
+            padding: 20px;
+            background: #fff;
+            margin-top: 10px;
+        }
+        /* Styles for the footer */
+        .footer {
+            background: #000000;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        .title-image {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            height: auto;
+        }
+        table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+        }
+        th, td {
+        text-align: left;
+        padding: 8px;
+        border: 1px solid black;
+        }
+        th {
+        background-color: #f2f2f2;
+        }
+        .button {
+            display: inline-block;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            color: #fff;
+            background-color: #4CAF50;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+        .slider {
+            width: 100%;
+            margin: 20px auto;
+            overflow: hidden;
+        }
+        .slides {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        .slide {
+            width: 100%;
+            flex-shrink: 0;
+            text-align: center;
+        }
+        .slide img {
+        width: 400px;
+        height: 400px;
+        object-fit: cover;
+        }
+        /* Navigation for the slider */
+        .slider-nav {
+            text-align: center;
+            margin-top: 10px;
+        }
+        /* Button styling within the slider navigation */
+        .slider-nav button {
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header section with company logo and main heading -->
+    <header class="header">
+        <img src="CMPE_332_Logo.png" alt="Company Logo">
+        <!-- reference link is added to return user back to homepage -->
+        <h1><a href="rental.html" style="text-decoration: none; color: inherit;">Scranton Spaces</a></h1>
+    </header>
+    <!-- Navigation bar with link to different pages of website -->
+    <ul class="nav">
+        <li><a href="listProperties.php">View Properties</a></li>
+        <li><a href="rentalGroupList.php">View Rental Groups</a></li>
+        <li><a href="averageMonthlyRentals.php">View Average Rents</a></li>
+    </ul>
+    <div class="main-content">
+        <h2>Welcome to Kingston's Finest Rental Property Management</h2>
+        <p>
+            At Scranton Spaces Rental Company, we are Kingston, Ontario's premier full-service residential property managementc company. 
+            Our mission is to provide rental spaces to univeristy students attending Queen's University and St. Lawrence College and complete
+            the final project for <i>CISC/CMPE 332 ~ Database Management Systems</i> taught by Wendy Powley.
+        </p>
+        <img src="rental_main_page.jpg" alt="random photo with houses for project">
+    </div>
+    <footer class="footer">
+        <p>&copy; Erhowvosere Otubu, 20293052</p>
+    </footer>
+</body>
+</html>

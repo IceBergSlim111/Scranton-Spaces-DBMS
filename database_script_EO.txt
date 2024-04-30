@@ -1,0 +1,232 @@
+drop database if exists rentalDB;
+create database rentalDB;
+use rentalDB;
+
+create table Person(
+	personID 		varchar(5) 	not null primary key, -- all people (owner, manager, renter, etc.) have a unique identifier which consists of two letters and 3 numbers (i.e., "CR123")
+	fname 			varchar(255) 	not null,
+	lname 			varchar(255) 	not null,
+	phone 			varchar(10) 	not null -- unique phone number
+);
+
+create table Manager (
+	managerID		varchar(5)	not null primary key,
+	startManagement 	int 		not null,
+	foreign key (managerID) references Person(personID) on delete cascade
+);
+
+create table Owner (
+	ownerID			varchar(5)	not null primary key,
+	foreign key (ownerID) references Person(personID) on delete cascade
+);
+
+create table Property(
+	propertyID 		int 		not null primary key, -- each rental property will have a unique integer ID
+	street 			varchar (255) 	not null,
+	apartment 		varchar (255) 	not null,
+	city 			varchar (255) 	not null,
+	province 		char (2) 	not null,
+	pc 			varchar (7) 	not null,
+	dateListed 		date 		not null,
+	numBath 		int	 	not null,
+	numBeds 		int 		not null,
+	cost	 		int 		not null, -- cost per month of rental property
+	acc 			varchar(255)	not null, -- aka accessible
+	parking 		boolean 	not null, -- 1 for "yes", 0 for "no"
+	manages			varchar(5),
+	foreign key (manages) references Manager(managerID) on delete set null
+);
+
+create table RentalGroup(
+	code			int		not null primary key, -- each rental group will be identified by a 4 digit code such as 0432 or 4893
+	prefType	 	varchar(255)	not null, -- only interested in one type of accomadation (house, apartment, room)
+	prefNumBeds 		int		not null,
+	prefNumBath 		int		not null,
+	prefParking		boolean		not null,
+	prefLaundry		boolean		not null,
+	cost			int		not null, -- the max price they wish to pay
+	prefAccessibility	varchar(255)	not null,
+	leases			int,
+	foreign key (leases) references Property(propertyID)
+);
+
+create table Renter (
+	renterID		varchar(5)	not null,
+	studentID		varchar(255)	not null,
+	gradYear 		int 		not null,
+	program 		varchar(255) 	not null,
+	rentalGroup		int		not null,
+	primary key (renterID, studentID),
+	foreign key (renterID) references Person(personID) on delete cascade,
+	foreign key (rentalGroup) references RentalGroup (code) on delete cascade
+);
+
+create table House(
+	houseID 		int 		not null primary key,
+	fence 			boolean 	not null, -- 1 for "yes", 0 for "no"
+	detached 		boolean 	not null, -- 1 for "detached", 0 for "semi"
+	foreign key (houseID) references Property(propertyID) on delete cascade
+);
+
+create table Apartment(
+	aptID 			int 		not null primary key,
+	floor 			int 		not null,
+	elevator 		boolean		not null, -- 1 for "yes", 0 for "no"
+	foreign key (aptID) references Property(propertyID) on delete cascade
+);
+
+create table Room(
+	roomID 			int 		not null primary key,
+	kitchen 		boolean		not null, -- 1 for "yes", 0 for "no"
+	numRoomates		int 		not null,
+	foreign key (roomID) references Property(propertyID) on delete cascade
+);
+
+create table Furnishing(
+	furnishingID		int		not null primary key,
+	furnishing		varchar(255)	not null, -- list of furnishings each room has (for instance, a bed, a desk, a lamp, a chair etc)
+	foreign key (furnishingID) references Room(roomID) on delete cascade
+);
+	
+create table Owns(
+	ownerID			varchar(5)	not null,
+	propertyID		int		not null,
+	primary key (ownerID, propertyID),
+	foreign key (ownerID) references Owner (ownerID),
+	foreign key (propertyID) references Property (propertyID)
+);
+
+
+
+INSERT INTO Person (personID, fname, lname, phone) VALUES
+('AB001', 'John', 'Doe', '1234567890'),
+('CD002', 'Jane', 'Smith', '2345678901'),
+('EF003', 'Alice', 'Johnson', '3456789012'),
+('GH004', 'Bob', 'Brown', '4567890123'),
+('IJ005', 'Carol', 'Davis', '5678901234'),
+('KL006', 'David', 'Martinez', '6789012345'),
+('MN007', 'Eve', 'Garcia', '7890123456'),
+('OP008', 'Frank', 'Wright', '8901234567'),
+('QR009', 'Grace', 'Huang', '9012345678'),
+('ST010', 'Ian', 'Kerr', '4123456789'),
+('UV011', 'Judy', 'Fleming', '1234509876'),
+('WX012', 'Kyle', 'Neil', '2345610987'),
+('YZ013', 'Laura', 'Patterson', '3456721098'),
+('AB014', 'Miguel', 'Navarro', '4567832109'),
+('CD015', 'Nina', 'Qureshi', '5678943210'),
+('EF016', 'Oscar', 'Reyes', '6789054321'),
+('GH017', 'Paula', 'Stewart', '7890165432'),
+('IJ018', 'Quinn', 'Torres', '8901276543'),
+('KL019', 'Rita', 'Unger', '9012387654'),
+('MN020', 'Sam', 'Voss', '9123498765'),
+('OP021', 'Tina', 'Wells', '1234509876'),
+('QR022', 'Umar', 'Xing', '2345610987'),
+('ST023', 'Vera', 'Young', '3456721098'),
+('UV024', 'Walt', 'Zimmerman', '4567832109');
+
+INSERT INTO Owner (ownerID) VALUES
+('AB001'),
+('CD002'),
+('EF003'),
+('GH004'),
+('IJ005'),
+('KL006');
+
+INSERT INTO Manager (managerID, startManagement) VALUES
+('MN007', 2015),
+('OP008', 2016),
+('QR009', 2017),
+('ST010', 2018),
+('UV011', 2019),
+('WX012', 2020);
+
+
+INSERT INTO Property (propertyID, street, apartment, city, province, pc, dateListed, numBath, numBeds, cost, acc, parking, manages) VALUES
+(7, '789 Maple Ave', '', 'Edmonton', 'AB', 'T5K 2N3', '2023-07-01', 2, 3, 1800, 'No', true, 'MN007'),
+(8, '890 Pine Rd', '', 'Saskatoon', 'SK', 'S7K 2N4', '2023-08-16', 3, 4, 2200, 'Yes', true, 'OP008'),
+(9, '991 Birch St', '', 'Regina', 'SK', 'S4P 3A5', '2023-09-01', 2, 3, 1600, 'No', false, 'QR009'),
+(10, '192 Oak Ave', '', 'Winnipeg', 'MB', 'R3C 4A6', '2023-10-17', 1, 2, 1400, 'Yes', true, 'ST010'),
+(11, '293 Cedar Path', '', 'Quebec City', 'QC', 'G1R 4B7', '2023-11-02', 3, 5, 2400, 'No', true, 'UV011'),
+(12, '394 Elm Lane', '', 'St. John\'s', 'NL', 'A1C 5M8', '2023-12-18', 2, 4, 2100, 'Yes', false, 'WX012'),
+(13, '495 Spruce Blvd', 'Apt 7', 'Mississauga', 'ON', 'L5B 3Y5', '2024-01-03', 1, 1, 1900, 'No', true, 'MN007'),
+(14, '596 Fir Ct', 'Unit 8', 'Brampton', 'ON', 'L6S 4M6', '2024-02-19', 2, 2, 2300, 'Yes', false, 'OP008'),
+(15, '697 Hemlock Rd', 'Suite 9', 'Hamilton', 'ON', 'L8N 4E9', '2024-03-07', 1, 3, 2500, 'No', true, 'QR009'),
+(16, '798 Redwood St', 'Apt 10', 'London', 'ON', 'N6A 5N1', '2024-04-22', 2, 2, 2200, 'Yes', true, 'ST010'),
+(17, '899 Douglas Ave', 'Unit 11', 'Guelph', 'ON', 'N1H 2S3', '2024-05-08', 1, 1, 1800, 'No', false, 'UV011'),
+(18, '900 Sequoia Way', 'Suite 12', 'Kitchener', 'ON', 'N2H 5Z6', '2024-06-23', 2, 3, 2600, 'Yes', true, 'WX012'),
+(19, '1011 Pine Tree Ln', 'Room A', 'Victoria', 'BC', 'V8W 2H5', '2024-07-09', 1, 1, 850, 'No', true, 'MN007'),
+(20, '1122 Fir Tree Rd', 'Room B', 'Kelowna', 'BC', 'V1Y 6T9', '2024-08-24', 1, 1, 900, 'Yes', false, 'OP008'),
+(21, '1233 Maple Dr', 'Room C', 'Surrey', 'BC', 'V3T 1T8', '2024-09-10', 1, 1, 950, 'No', true, 'QR009'),
+(22, '1344 Oak St', 'Room D', 'Richmond', 'BC', 'V6Y 2T9', '2024-10-26', 1, 1, 1000, 'Yes', true, 'ST010'),
+(23, '1455 Birch Pl', 'Room E', 'Burnaby', 'BC', 'V5H 4N2', '2024-11-11', 1, 1, 800, 'No', false, 'UV011'),
+(24, '1566 Cedar Ave', 'Room F', 'Coquitlam', 'BC', 'V3B 7S8', '2024-12-27', 1, 1, 850, 'Yes', true, 'WX012');
+
+INSERT INTO Owns (ownerID, propertyID) VALUES
+('AB001', 7),
+('CD002', 8),
+('EF003', 9),
+('GH004', 10),
+('IJ005', 11),
+('KL006', 12),
+('AB001', 13),
+('CD002', 14),
+('EF003', 15),
+('GH004', 16),
+('IJ005', 17),
+('KL006', 18),
+('AB001', 19),
+('CD002', 20),
+('EF003', 21),
+('GH004', 22),
+('IJ005', 23),
+('KL006', 24);
+
+INSERT INTO House (houseID, fence, detached) VALUES
+(7, true, true),
+(8, false, true),
+(9, true, false),
+(10, false, true),
+(11, true, true),
+(12, false, false);
+
+
+INSERT INTO Apartment (aptID, floor, elevator) VALUES
+(13, 2, true),
+(14, 3, false),
+(15, 1, true),
+(16, 4, true),
+(17, 2, false),
+(18, 5, true);
+
+
+INSERT INTO Room (roomID, kitchen, numRoomates) VALUES
+(19, true, 1),
+(20, false, 2),
+(21, true, 0),
+(22, false, 1),
+(23, true, 3),
+(24, false, 2);
+
+INSERT INTO Furnishing (furnishingID, furnishing) VALUES
+(19, 'Bed, Desk, Chair, Lamp'),
+(20, 'Bed, Bookshelf, Wardrobe'),
+(21, 'Sofa, Coffee Table, TV Stand'),
+(22, 'Desk, Chair, Bed, Lamp'),
+(23, 'Bed, Desk, Chair, Dresser, Lamp'),
+(24, 'Murphy Bed, Built-in Desk, Chair');
+
+INSERT INTO RentalGroup (code, prefType, prefNumBeds, prefNumBath, prefParking, prefLaundry, cost, prefAccessibility, leases) VALUES
+(1, 'Apartment', 2, 1, true, true, 2500, 'Yes', NULL),
+(2, 'House', 3, 2, true, false, 3000, 'No', NULL),
+(3, 'Room', 1, 1, false, true, 1200, 'Yes', NULL),
+(4, 'Apartment', 1, 1, false, true, 1800, 'No', NULL),
+(5, 'House', 4, 2, true, false, 3500, 'Yes', NULL),
+(6, 'Room', 1, 1, true, true, 1000, 'No', NULL);
+
+INSERT INTO Renter (renterID, studentID, gradYear, program, rentalGroup) VALUES
+('YZ013', '29643408', 2024, 'Computer Engineering', 1),
+('AB014', '26798624', 2023, 'Computer Science', 2),
+('CD015', '19898352', 2025, 'Chemistry', 3),
+('EF016', '25709845', 2022, 'Commerce', 4),
+('GH017', '36820963', 2026, 'Health Sciences', 5),
+('IJ018', '49241098', 2024, 'Gender Studies', 6);
